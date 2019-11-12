@@ -1,0 +1,420 @@
+/*!
+ * Stylesheet to be the next version of the stylesheet for dbwebb.se.
+ *
+ * This stylesheet is a look-a-like the dbwebb.se stylesheet and it is
+ * special for the design course. The style is used to show off various
+ * constructions of the website to show how they could be styled.
+ */
+
+/**
+ * Normalize and reset the style.
+ */
+@import "normalize.css/normalize.less";
+
+
+
+/**
+ * Font Awesome.
+ */
+@import "@fortawesome/fontawesome-free/less/fontawesome.less";
+@import "@fortawesome/fontawesome-free/less/solid.less";
+@import "@fortawesome/fontawesome-free/less/brands.less";
+
+
+
+/**
+ * Mixins within the namespace #desinax-mixin.
+ * @TODO clean up what mixins are used
+ */
+@import "@desinax/mixin/less/clearfix.less";
+@import "@desinax/mixin/less/mixins.less";
+@import "@desinax/mixin/less/css3mixins.less";
+
+.clearfix() {
+    #desinax-mixin.clearfix();
+}
+
+
+
+/**
+ * Desinax general modules, namespace #desinax-general. (You must enable
+ * the style you want and add layout.)
+ * @TODO check and clean up, add namespace.
+ */
+@import "@desinax/general/less/byline.less";
+@import "@desinax/general/less/gallery.less";
+@import "@desinax/general/less/highlightjs-default.less";
+@import "@desinax/general/less/image-overlay.less";
+@import "@desinax/general/less/notice.less";
+@import "@desinax/general/less/revision.less";
+
+
+
+/**
+ * Vertical grid
+ */
+@import "@desinax/vertical-grid/less/grid.less";
+
+html.vgrid .inner-wrap {
+    @gridImage: "../img/theme/grid_@{columns}x@{columnWidth}x@{gutterWidth}-nomargin.png";
+    #desinax-vgrid.showGrid(@gridImage, 1100px);
+
+    &.inner-wrap-header,
+    &.inner-wrap-footer {
+        #desinax-vgrid.showGrid(@gridImage);
+    }
+}
+
+
+
+/**
+ * Typographic grid in namespace #desinax-hgrid.
+ */
+@import "@desinax/typographic-grid/less/typography-font-families.less";
+@import "@desinax/typographic-grid/less/typography-defaults.less";
+
+html.hgrid .inner-wrap {
+    #desinax-hgrid.showGridAlt();
+}
+
+
+
+/**
+ * Figure and figcaption mixins, namespace #desinax-figure. You must enable
+ * the style you want and add layout.
+ */
+@import "@desinax/figure/less/asciinema.less";
+@import "@desinax/figure/less/figure.less";
+@import "@desinax/figure/less/codepen.less";
+
+// Enable style from the module and add layout
+figure.figure {
+    #desinax-figure.figure(1100px);
+}
+
+figure.asciinema {
+    &:extend(figure.figure);
+    #desinax-figure.asciinema();
+}
+
+figure.figure-codepen, // @TODO remove this?
+figure.codepen {
+    &:extend(figure.figure);
+    #desinax-figure.codepen();
+}
+
+// @TODO remove this?
+img.responsive {
+    max-width: 100%;
+}
+
+
+
+/**
+ * Links and navigation
+ * @TODO check and clean up
+ */
+
+// Cleanup theses
+@anchorColor:         #33b;
+@anchorColor2:        #448;
+@anchorColorHover:    #33f;
+@anchorColorActive:   #838;
+@anchorColorVisited:  #838;
+
+@anchorColorAnonymous:      @colorBody;
+@anchorColorAnonymousHover: #00c;
+
+@anchorTabBgColor:          lighten(@anchorColorHover, 35%);
+@anchorTabBgColorHover:     lighten(@anchorColorHover, 30%);
+@anchorTabBgColorActive:    lighten(@anchorColorHover, 35%);
+@anchorTabBgColorSelected:  @bgColorBody;
+
+
+@import "@desinax/link/less/anchor-header.less";
+@import "@desinax/link/less/breadcrumb.less";
+//@import "@desinax/link/less/links-extra-dbwebb.less";
+@import "@desinax/link/less/list.less";
+@import "@desinax/link/less/next-previous.less";
+@import "@desinax/link/less/toc.less";
+
+//  breadcrumb.less
+.breadcrumb-list,
+.bullet-list {
+    margin-bottom: @magicNumber;
+    #desinax-hgrid.fontSize(@fontSizeSmall);
+    li {
+        .anchorAnonymous();
+    }
+}
+
+// Killed file links.less
+.anchor(@anchorColor, @anchorColorHover, @anchorColorVisited);
+
+.footer {
+  .anchor(@anchorColor2)
+}
+
+.fab.fa-icon:hover {
+    color: green;
+}
+
+
+
+/**
+ * Use internal modules
+ * @TODO check and clean up and explain what this style does.
+ */
+@import "modules/blog.less";
+@import "modules/forms.less";
+@import "modules/linkedin.less";
+//@import "modules/variables.less"; // OBSOLETE
+
+
+
+/**
+ * Base style to affect HTML elements on a general scale.
+ */
+@import "base/base.less";
+
+
+
+/**
+ * Layout style for general structure of header, navbar, main, footer
+ * and other regions of the page including route specific styles.
+ */
+@import "layout/layout_v2.less";
+@import "layout/dbwebb-se_v2.less"; // Rearrange and move classic style to layout.less
+@import "layout/regions.less";
+
+
+
+.site-logo {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.site-logo-text {
+    font-family: @fontFamilySiteLogo;
+    padding-left: 0.2em;
+}
+
+.rm-navbar {
+    text-align: center;
+    font-family: @fontFamilyCambria;
+    font-size: 1.5em;
+    line-height: 0;
+}
+
+.rm-menu-button {
+    font-size: 1.5em;
+}
+
+.rm-desktop li ul {
+    background-color: #fff;
+}
+
+.wrap-sidebar .block h4 {
+    border-top: 1px solid #ccc;
+    background-image: linear-gradient(to right, #fff, #ccc);
+}
+
+
+
+/**
+ * My settings.
+ */
+@bgColorHtml: #424242;
+@bgColorBody: #fff;
+@colorBody:   #111;
+
+@fontFamilyHeadings: @fontFamilyCambria;
+@fontFamilyBody:     @fontFamilyVerdana;
+@fontFamilyCode:     @fontFamilyCourier;
+
+@colorH1BorderBottom: #666; // Add to h4 also
+@colorH2BorderBottom: #ccc;
+@colorH3BorderBottom: #eee;
+@colorH4BorderBottom: #eee;
+
+@magicNumber:  24px;
+@fontSizeBody: 16px;
+
+@columnWidth:   30;
+@gutterWidth:   10;
+@columns:       24;
+@gridType:      "float"; // "flex"
+
+@navbarFontFamily: @fontFamilyTimesNewRoman;
+
+
+   .site-logo {
+       background-color: rgba(236, 100, 75, 0.4);
+       border-radius: 50%;
+       width: 210px;
+       height: 210px;
+
+   }
+
+   /* unvisited link */
+   a:link {
+     color: #111111;
+   }
+
+   /* visited link */
+   a:visited {
+     color: #333333;
+   }
+
+   /* mouse over link */
+   a:hover {
+     color: #555555;
+   }
+
+   /* selected link */
+   a:active {
+     color: #111111;
+     boarder-box: 1px solid #222222;
+   }
+
+   .outer-wrap {
+    background-color: rgb(33,125,86);
+ }
+
+   .inner-wrap-main {
+    background-color: rgb(100,134,255);
+    border-top-left-radius: 5%;
+    border-top-right-radius: 5%;
+    margin-top: 60px;
+    min-height: 500px;
+   }
+
+   .outer-wrap-footer {
+       background-color: rgb(100,134,255);
+   }
+
+   .region-footer p,
+   .region-footer h4 {
+       color: #111111;
+   }
+
+   .region-footer h4 {
+      text-align: center;
+  }
+
+  @import url('https://fonts.googleapis.com/css?family=Merriweather|Source+Sans+Pro');
+
+  html {
+      font-size: 100%;
+  }
+
+  h1,
+  h2,
+  h4 {
+      font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  p {
+      font-family: 'Merriweather', serif;
+  }
+
+  #rm-menu {
+      background-color: #D0614F;
+  }
+
+  #rm-menu a:hover {
+      background-color: #DAA13D;
+  }
+
+  .rm-max .rm-mobile .rm-submenu-button {
+      background-color: #DC7929;
+  }
+
+  .rm-max .rm-mobile .rm-submenu-button:hover {
+      background-color: #DAA13D;
+  }
+
+  .btn {
+      color: #333;
+      background-color: #fff;
+      background-image: linear-gradient(#fff, #eee);
+      border: 1px solid #ccc;
+      text-decoration: none;
+      box-sizing: border-box;
+      display: inline-block;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 1.4rem;
+      padding: 0.4rem 1rem;
+      text-align: center;
+      border-radius: 0.2rem;
+      line-height: 1.4;
+  }
+
+  table {
+      border: 1px solid #ccc;
+      padding: 0.5em;
+  }
+
+  tr.first {
+      background-color: #ddd;
+  }
+
+  tr:nth-child(even) {
+      background-color: rgb(255,255,255);
+      background-color: rgba(255,255,255, 0.5);
+  }
+
+  tr:hover {
+      background-color: #eee;
+  }
+
+  th {
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+  }
+
+  th,
+  td {
+      padding: 4px;
+  }
+
+  img.thumb {
+      max-width: 100px;
+      max-height: 100px;
+  }
+
+  .how {
+      float: right;
+      width: 300px;
+      padding-left: 3em;
+
+  }
+
+  .index {
+      float: left;
+      width: 600px;
+      padding-left: 0.5em;
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+      padding-right: 0px;
+  }
+
+  .link {
+       background:none;
+       color:inherit;
+       border:none;
+       padding:0!important;
+       font: inherit;
+       /*border is optional*/
+       border-bottom:1px solid #444;
+       cursor: pointer;
+  }
+
+  a.icons {
+      color: inherit;
+  }
+
+  a:hover.icons {
+      opacity: 0.7;
+  }
