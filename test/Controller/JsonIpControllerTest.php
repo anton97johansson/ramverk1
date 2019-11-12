@@ -29,7 +29,7 @@ class JsonIpControllerTest extends TestCase
 
         // Do the test and assert it
         $request = $di->get("request");
-        $response = $di->get("response");
+        // $response = $di->get("response");
         $request->setGet("ip", "44.125.111.240");
         $res = $controller->indexAction();
         // $request->setGet("ip", "ad.wawd");
@@ -38,10 +38,7 @@ class JsonIpControllerTest extends TestCase
         $this->assertInstanceOf("Anax\Response\ResponseUtility", $res);
     }
 
-    /**
-     * Test the route "index".
-     */
-    public function testFalseIndexAction()
+    public function testJsonAction()
     {
         global $di;
         $di = new DIFactoryConfig();
@@ -57,14 +54,39 @@ class JsonIpControllerTest extends TestCase
 
         // Do the test and assert it
         $request = $di->get("request");
-        $response = $di->get("response");
+        // $response = $di->get("response");
+        $request->setGet("ip", "44.125.111.240");
+        $res = $controller->jsonAction();
+        // $request->setGet("ip", "ad.wawd");
+        // $this->assertIsObject($res);
+        $this->assertInternalType("array", $res);
+    }
+
+    /**
+     * Test the route "index".
+     */
+    public function testFalseJsonAction()
+    {
+        global $di;
+        $di = new DIFactoryConfig();
+        $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
+
+        // Use a different cache dir for unit test
+        $di->get("cache")->setPath(ANAX_INSTALL_PATH . "/test/cache");
+
+        // Setup the controller
+        $controller = new JsonIpController();
+        $controller->setDI($di);
+        $controller->initialize();
+
+        // Do the test and assert it
+        $request = $di->get("request");
+        // $response = $di->get("response");
         // $request->setGet("ipAdress", "44.125.111.240");
         $request->setGet("ip", "ad.waw.125.11");
         // var_dump($request->getGet("ip"));
-        $res = $controller->indexAction();
-        $this->assertInstanceOf("Anax\Response\Response", $res);
-        $this->assertInstanceOf("Anax\Response\ResponseUtility", $res);
-
+        $res = $controller->jsonAction();
+        $this->assertInternalType("array", $res);
     }
     //
     //

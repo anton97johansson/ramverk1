@@ -58,6 +58,15 @@ class JsonIpController implements ContainerInjectableInterface
     {
         $title = "IP JSON";
         $page = $this->di->get("page");
+
+        $page->add("ip/json_forms");
+        return $page->render([
+            "title" => $title,
+        ]);
+    }
+    public function jsonAction() : array
+    {
+        // $page = $this->di->get("page");
         $ipAddress = $this->di->request->getGet("ip") ?? null;
         $hostname = null;
         $check = null;
@@ -74,45 +83,11 @@ class JsonIpController implements ContainerInjectableInterface
                 $hostname = "Not found";
             }
         }
-
         $data = [
-            "check" => json_encode(["ip" => $check,
-                                    "domain" => $hostname])
-            // "hostname" => $hostnam
-        ];
-        $page->add("ip/json_forms", $data);
-        return $page->render([
-            "title" => $title,
-        ]);
-    }
+            "ip" => $check,
+            "domain" => $hostname
 
-    // public function  jsonAction() : object
-    // {
-    //     $title = "IP JSON";
-    //     $page = $this->di->get("page");
-    //     $ipAddress = $this->di->request->getGet("ip") ?? null;
-    //     $hostname = null;
-    //     $check = null;
-    //     // $ipAddress = strval($ipAddress);
-    //     if ($ipAddress !== null) {
-    //         if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-    //             $check = $ipAddress . " is OK";
-    //             $hostname = gethostbyaddr($ipAddress);
-    //             if ($hostname == $ipAddress) {
-    //                 $hostname = "Not found";
-    //             }
-    //         } else {
-    //             $check = $ipAddress . " is NOT OK";
-    //             $hostname = "Not found";
-    //         }
-    //     }
-    //
-    //     $data = [
-    //         "ip" => $check,
-    //         "domain" => $hostname
-    //
-    //     ];
-    //
-    //     return [$data];
-    // }
+        ];
+        return [$data];
+    }
 }

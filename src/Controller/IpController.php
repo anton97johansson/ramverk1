@@ -58,7 +58,8 @@ class IpController implements ContainerInjectableInterface
     {
         $page = $this->di->get("page");
         $title = "ip validator";
-        $ipAddress = $this->di->request->getGet("ipAdress") ?? null;
+        $request = $this->di->get("request");
+        $ipAddress = $request->getGet("ipAdress") ?? null;
         $hostname = null;
         $check = null;
         if ($ipAddress !== null) {

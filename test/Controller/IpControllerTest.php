@@ -29,12 +29,12 @@ class IpControllerTest extends TestCase
 
         // Do the test and assert it
         $request = $di->get("request");
-        $response = $di->get("response");
+        // $response = $di->get("response");
         $request->setGet("ipAdress", "44.125.111.240");
         $res = $controller->indexAction();
-        $response->redirectSelf();
+        // $response->redirectSelf();
         $this->assertIsObject($res);
-        $response->redirectSelf();
+        // $response->redirectSelf();
         $this->assertInstanceOf("Anax\Response\Response", $res);
         $this->assertInstanceOf("Anax\Response\ResponseUtility", $res);
     }
@@ -58,7 +58,7 @@ class IpControllerTest extends TestCase
 
         // Do the test and assert it
         $request = $di->get("request");
-        $response = $di->get("response");
+        // $response = $di->get("response");
         // $request->setGet("ipAdress", "44.125.111.240");
         $request->setGet("ipAdress", "ad.wawd");
         // var_dump($request->getGet("ipAdress"));
