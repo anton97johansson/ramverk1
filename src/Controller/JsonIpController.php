@@ -38,11 +38,11 @@ class JsonIpController implements ContainerInjectableInterface
       *
       * @return void
       */
-     public function initialize() : void
-     {
+    public function initialize() : void
+    {
          // Use to initialise member variables.
          $this->model = new IpModel();
-     }
+    }
 
 
 

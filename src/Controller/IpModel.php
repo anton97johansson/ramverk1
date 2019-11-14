@@ -23,8 +23,7 @@ class IpModel
 
     public function local() : string
     {
-        // return file_get_contents("http://ipecho.net/plain");
-        return "1.1.2.2.21.2";
+        return file_get_contents("http://ipecho.net/plain");
     }
 
     public function ipValidateJson($ipAddress) : array
@@ -46,34 +45,33 @@ class IpModel
 
     public function ipStack($ipAddress)
     {
-        // $path = ANAX_INSTALL_PATH . "/config/api.txt";
-        // $accessKey = file_get_contents($path);
-        // // $handle = fopen(ANAX_INSTALL_PATH . "/config/api.txt", "r");
-        // // if ($handle) {
-        // //         $accessKey = fgets($handle);
-        // //         // echo $line;
-        // //     }
-        // //     fclose($handle);
-        // // Initialize CURL:
-        // $chr = curl_init('http://api.ipstack.com/'.$ipAddress.'?access_key='.trim($accessKey).'');
-        // curl_setopt($chr, CURLOPT_RETURNTRANSFER, true);
-        //
-        // // Store the data:
-        // $json = curl_exec($chr);
-        // curl_close($chr);
-        // $controll = $this->ipValidateJson($ipAddress);
-        //
-        //
-        // // Decode JSON response:
-        // $apiResult = json_decode($json, true);
-        // $apiResult["ip check"] = $controll["ip"];
-        // $apiResult["domain"] = $controll["domain"];
-        // // if (trim($accessKey) === $k) {
-        // //     return "lika";
-        // // } else {
-        // //     return var_dump(trim());
-        // // }
-        $apiResult = ["latitude" => 0.222, "longitude" => -2.22, "country_name" => "dd", "region_name" => "dawd"];
+        $path = ANAX_INSTALL_PATH . "/config/api.txt";
+        $accessKey = file_get_contents($path);
+        // $handle = fopen(ANAX_INSTALL_PATH . "/config/api.txt", "r");
+        // if ($handle) {
+        //         $accessKey = fgets($handle);
+        //         // echo $line;
+        //     }
+        //     fclose($handle);
+        // Initialize CURL:
+        $chr = curl_init('http://api.ipstack.com/'.$ipAddress.'?access_key='.trim($accessKey).'');
+        curl_setopt($chr, CURLOPT_RETURNTRANSFER, true);
+
+        // Store the data:
+        $json = curl_exec($chr);
+        curl_close($chr);
+        $controll = $this->ipValidateJson($ipAddress);
+
+
+        // Decode JSON response:
+        $apiResult = json_decode($json, true);
+        $apiResult["ip check"] = $controll["ip"];
+        $apiResult["domain"] = $controll["domain"];
+        // if (trim($accessKey) === $k) {
+        //     return "lika";
+        // } else {
+        //     return var_dump(trim());
+        // }
         return $apiResult;
     }
 }
