@@ -88,6 +88,54 @@ class JsonIpControllerTest extends TestCase
         $res = $controller->jsonAction();
         $this->assertInternalType("array", $res);
     }
+
+    public function testJsonlocationAction()
+    {
+        global $di;
+        $di = new DIFactoryConfig();
+        $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
+
+        // Use a different cache dir for unit test
+        $di->get("cache")->setPath(ANAX_INSTALL_PATH . "/test/cache");
+
+        // Setup the controller
+        $controller = new JsonIpController();
+        $controller->setDI($di);
+        $controller->initialize();
+
+        // Do the test and assert it
+        // $request = $di->get("request");
+        // $response = $di->get("response");
+        // $request->setGet("ip", "44.125.111.240");
+        $res = $controller->jsonlocationAction();
+        // $request->setGet("ip", "ad.wawd");
+        $this->assertIsObject($res);
+        // $this->assertInternalType("array", $res);
+    }
+
+    public function testJsonMapAction()
+    {
+        global $di;
+        $di = new DIFactoryConfig();
+        $di->loadServices(ANAX_INSTALL_PATH . "/config/di");
+
+        // Use a different cache dir for unit test
+        $di->get("cache")->setPath(ANAX_INSTALL_PATH . "/test/cache");
+
+        // Setup the controller
+        $controller = new JsonIpController();
+        $controller->setDI($di);
+        $controller->initialize();
+
+        // Do the test and assert it
+        $request = $di->get("request");
+        // $response = $di->get("response");
+        $request->setGet("ip", "fejk.ip");
+        $res = $controller->jsonMapAction();
+        // $request->setGet("ip", "ad.wawd");
+        // $this->assertIsObject($res);
+        $this->assertInternalType("array", $res);
+    }
     //
     //
     //

@@ -54,8 +54,18 @@ return [
             "title" => "Ip kontroller",
         ],
         [
-            "text" => "ip w json",
+            "text" => "ip i json",
             "url" => "jsonip",
+            "title" => "Ip kontroller med JSON svar",
+        ],
+        [
+            "text" => "ip geo check",
+            "url" => "ip/map",
+            "title" => "Ip geo kontroller",
+        ],
+        [
+            "text" => "ip i json geo",
+            "url" => "jsonip/jsonlocation",
             "title" => "Ip kontroller med JSON svar",
         ],
     ],

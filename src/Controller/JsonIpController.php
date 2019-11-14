@@ -27,22 +27,22 @@ class JsonIpController implements ContainerInjectableInterface
     /**
      * @var string $db a sample member variable that gets initialised
      */
-    private $db = "not active";
+     private $model;
 
 
 
-    /**
-     * The initialize method is optional and will always be called before the
-     * target method/action. This is a convienient method where you could
-     * setup internal properties that are commonly used by several methods.
-     *
-     * @return void
-     */
-    public function initialize() : void
-    {
-        // Use to initialise member variables.
-        $this->db = "active";
-    }
+     /**
+      * The initialize method is optional and will always be called before the
+      * target method/action. This is a convienient method where you could
+      * setup internal properties that are commonly used by several methods.
+      *
+      * @return void
+      */
+     public function initialize() : void
+     {
+         // Use to initialise member variables.
+         $this->model = new IpModel();
+     }
 
 
 
@@ -64,30 +64,39 @@ class JsonIpController implements ContainerInjectableInterface
             "title" => $title,
         ]);
     }
+
+    public function jsonlocationAction() : object
+    {
+        $title = "IP JSON MED LOCAtiON";
+        $page = $this->di->get("page");
+
+        $page->add("ip/json_location_forms");
+        return $page->render([
+            "title" => $title,
+        ]);
+    }
+
     public function jsonAction() : array
     {
-        // $page = $this->di->get("page");
-        $ipAddress = $this->di->request->getGet("ip") ?? null;
-        $hostname = null;
-        $check = null;
-        // $ipAddress = strval($ipAddress);
+        $request = $this->di->get("request");
+        $ipAddress = $request->getGet("ip") ?? null;
+        $data = [];
         if ($ipAddress !== null) {
-            if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                $check = $ipAddress . " is OK";
-                $hostname = gethostbyaddr($ipAddress);
-                if ($hostname == $ipAddress) {
-                    $hostname = "Not found";
-                }
-            } else {
-                $check = $ipAddress . " is NOT OK";
-                $hostname = "Not found";
-            }
+            $data = $this->model->ipValidate($ipAddress);
         }
-        $data = [
-            "ip" => $check,
-            "domain" => $hostname
+        return [$data];
+    }
 
-        ];
+    public function jsonMapAction() : array
+    {
+        // $page = $this->di->get("page");
+        $request = $this->di->get("request");
+        $ipAddress = $request->getGet("ip") ?? null;
+        // $ipAddress = strval($ipAddress);
+        $data = [];
+        if ($ipAddress !== null) {
+            $data = $this->model->ipStack($ipAddress);
+        }
         return [$data];
     }
 }
