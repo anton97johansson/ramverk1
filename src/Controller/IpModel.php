@@ -45,8 +45,11 @@ class IpModel
 
     public function ipStack($ipAddress)
     {
-        $path = ANAX_INSTALL_PATH . "/config/api.txt";
-        $accessKey = file_get_contents($path);
+        // $path = ANAX_INSTALL_PATH . "/config/api.txt";
+        $keys = require(ANAX_INSTALL_PATH . "/config/api.php");
+        // $accessKey = file_get_contents($path[0]);
+
+        $accessKey = $keys[0];
         // $handle = fopen(ANAX_INSTALL_PATH . "/config/api.txt", "r");
         // if ($handle) {
         //         $accessKey = fgets($handle);
