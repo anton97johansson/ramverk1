@@ -1,15 +1,12 @@
 <?php
 
 namespace Anax\View;
-
 ?>
 <!-- <script src="../view/ip/OpenLayers.js"></script> -->
 <form>
     <fieldset>
     <legend>Try ip adress</legend>
-
     <p>
-        <?php var_dump($tja[0]);?>
         <input type="radio" name="type" value="Historik">Historik, 30 dagar<br>
         <input type="radio" name="type" value="Kommande" checked="checked">Kommande väder<br /><br />
         <label>IP Adress alternativt latitude, longitude:<br>
@@ -24,6 +21,9 @@ namespace Anax\View;
     </fieldset>
 </form>
 
+<?php if (is_string($hist)) : ?>
+    <?=$hist?>
+<?php endif; ?>
 <p><?=$check?></p>
 <?php if (isset($type)) : ?>
     <p>Ipv<?=$type?></p>
@@ -31,8 +31,26 @@ namespace Anax\View;
     <p>Land=<?=$country?> | region=<?=$region?></p>
     <p>Domain: <?=$hostname?></p>
 <?php endif;?>
-
-<div id="map" style="width: 800px; height: 450px;"></div>
+<?php if (sizeof($tja) != 0) : ?>
+<table style="width:100%">
+  <tr>
+    <th>Date</th>
+    <th>Description</th>
+  </tr>
+  <?php
+  $i = 0;
+  foreach($tja as $day) : ?>
+      <tr>
+        <td align="center"><?=$dates[$i]?></td>
+        <td align="center"><?=$day?></td>
+      </tr>
+<?php
+$i += 1;
+ endforeach; ?>
+</table>
+<?php endif; ?>
+<?php if (!is_string($hist)) : ?>
+<div id="map" style="width: 100%; height: 450px;"></div>
 
 <link rel="stylesheet" href="<?=url("css/leaflet.css")?>"/>
 <script src="<?=url("js/leaflet.js")?>"></script>
@@ -44,3 +62,4 @@ namespace Anax\View;
     map.setView(new L.LatLng(<?=$lat?>, <?=$long?>), 13).addLayer(osm);
     var marker = L.marker([<?=$lat?>, <?=$long?>]).addTo(map);
 </script>
+<?php endif?>

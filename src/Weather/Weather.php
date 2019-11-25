@@ -13,6 +13,44 @@ class Weather implements ContainerInjectableInterface
     use ContainerInjectableTrait;
 
 
+    public function dates($start, $to) : array {
+        $old = new \DateTime();
+        if ($start) {
+            $old->modify($start);
+        }
+        $dates = [];
+        $day = 0;
+        while($day <= $to) {
+            $dates[] = $old->format("Y-m-d");
+            $old->modify('+1 day');
+            $day+=1;
+        }
+        return $dates;
+    }
+
+    public function newWeather($lat, $long) {
+        $keys = require(ANAX_INSTALL_PATH . "/config/api.php");
+        // $accessKey = file_get_contents($path[0]);
+
+        $accessKey = $keys[1];
+
+        $chr = curl_init('https://api.darksky.net/forecast/'.$accessKey.'/'.$lat.','.$long.'?exclude=flags,hourly,minutley,currently');
+        curl_setopt($chr, CURLOPT_RETURNTRANSFER, true);
+
+        // Store the data:
+        $json = curl_exec($chr);
+        curl_close($chr);
+        $apiResult = json_decode($json, true);
+        if (isset($apiResult[0]["code"])) {
+            return $apiResult[0]["error"].'. Bad latitude longitude, could not retrive weather. Try again';
+        }
+        if (isset($apiResult["error"])) {
+            return $apiResult["error"].'. Bad latitude longitude, could not retrive weather. Try again';
+        }
+        return $apiResult["daily"]["data"];
+
+    }
+
     public function histWeather($lat, $long)
     {
         $keys = require(ANAX_INSTALL_PATH . "/config/api.php");
@@ -20,9 +58,9 @@ class Weather implements ContainerInjectableInterface
 
         $accessKey = $keys[1];
 
-        $currDate = new \DateTime();
+        // $currDate = new \DateTime();
         $old = new \DateTime();
-        $old->modify('-30 day');
+        $old->modify('-31 day');
 
                 // array of curl handles
         $multiCurl = array();
@@ -57,39 +95,51 @@ class Weather implements ContainerInjectableInterface
         }
         // $i = 0;
         $fixedResult = [];
+        if (isset($result[0]["code"])) {
+            return $result[0]["error"].'. Bad latitude longitude, could not retrive weather. Try again';
+        }
+        if (isset($result[0]["error"])) {
+            return $result[0]["error"].'. Bad latitude longitude, could not retrive weather. Try again';
+        }
         foreach ($result as $res) {
             $fixedResult[] = $res["daily"]["data"];
             // $i+=1;
         }
         // close
         curl_multi_close($mh);
-        return $data;
+        return $fixedResult;
     }
-    public function test($lat, $long)
+    public function json($apiResult, $dates, $type)
     {
-        $keys = require(ANAX_INSTALL_PATH . "/config/api.php");
-        // $accessKey = file_get_contents($path[0]);
-
-        $accessKey = $keys[1];
-
-        $currDate = new \DateTime();
-        $old = new \DateTime();
-        $old->modify('-30 day');
-
-                // array of curl handles
-        $multiCurl = array();
-        // data to be returned
-        $result = array();
-        // multi handle
-        $mh = curl_multi_init();
-        $day = 0;
-        $urls = [];
-        while($day <=30) {
-          // URL from which data will be fetched
-          $urls[] = 'https://api.darksky.net/forecast/'.$accessKey.'/'.$lat.','.$long.','.$old->format("Y-m-d").'T12:00:00?exclude=flags,hourly,minutley,currently';
-          $old->modify('+1 day');
-          $day+=1;
+        if (is_string($apiResult)) {
+            return ["Error" => $apiResult];
         }
-        return $urls;
+        if ($type == "h") {
+            foreach ($apiResult as $day) {
+                $summaries[] = $day[0]["summary"];
+            }
+            $counter = 0;
+            foreach ($dates as $day) {
+                $res["date"] = $day;
+                $res["summary"] = $summaries[$counter];
+                $arr[] = $res;
+                // $res[$day] = $summaries[$counter];
+                $counter += 1;
+            }
+        }
+        elseif ($type == "k") {
+            foreach ($apiResult as $day) {
+                $summaries[] = $day["summary"];
+            }
+            $counter = 0;
+            foreach ($dates as $day) {
+                $res["date"] = $day;
+                $res["summary"] = $summaries[$counter];
+                $arr[] = $res;
+                // $res[$day] = $summaries[$counter];
+                $counter += 1;
+            }
+        }
+        return $arr;
     }
 }

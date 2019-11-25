@@ -68,5 +68,15 @@ return [
             "url" => "jsonip/jsonlocation",
             "title" => "Ip kontroller med JSON svar",
         ],
+        [
+            "text" => "weather",
+            "url" => "weather",
+            "title" => "weather",
+        ],
+        [
+            "text" => "json weather",
+            "url" => "jsonweather",
+            "title" => "json weather",
+        ],
     ],
 ];

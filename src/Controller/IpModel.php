@@ -15,7 +15,7 @@ class IpModel
                 $hostname = "Not found";
             }
         } else {
-            $check = $ipAddress . " is NOT OK";
+            $check = $ipAddress . " is NOT OK ip address";
             $hostname = "Not found";
         }
         return [$check, $hostname, $version];
@@ -37,7 +37,7 @@ class IpModel
                 $hostname = "Not found";
             }
         } else {
-            $check = $ipAddress . " is NOT OK";
+            $check = $ipAddress . " is NOT OK ip address";
             $hostname = "Not found";
         }
         return ["ip" => $check, "domain" => $hostname, "type" => $version];
@@ -67,7 +67,7 @@ class IpModel
 
 
         // Decode JSON response:
-        $apiResult = json_decode($json, true);
+        $apiResult = json_decode($json, true, JSON_UNESCAPED_UNICODE);
         $apiResult["ip check"] = $controll["ip"];
         $apiResult["domain"] = $controll["domain"];
         // if (trim($accessKey) === $k) {

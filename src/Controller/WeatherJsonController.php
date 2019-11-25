@@ -19,7 +19,7 @@ use Anax\Controller\IpModel;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class WeatherController implements ContainerInjectableInterface
+class WeatherJsonController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
@@ -55,9 +55,20 @@ class WeatherController implements ContainerInjectableInterface
      *
      * @return string
      */
+
     public function indexAction() : object
     {
+        $title = "IP JSON";
         $page = $this->di->get("page");
+
+        $page->add("weather/json_docs");
+        return $page->render([
+            "title" => $title,
+        ]);
+    }
+
+    public function jsonAction() : array
+    {
         $weather = $this->di->get("weather");
         $title = "ip validator with map";
         $request = $this->di->get("request");
@@ -75,8 +86,8 @@ class WeatherController implements ContainerInjectableInterface
         $answer = null;
         $summaries = [];
         $dates = null;
-        if ($ipAddress !== null) {
-            $type = $request->getGet("type") ?? null;
+        $type = $request->getGet("type") ?? null;
+        if ($ipAddress !== null && $type !== null) {
             if (strpos($ipAddress, ":") || strpos($ipAddress, ",") == false ) {
                 $response = $this->model->ipValidate($ipAddress);
                 $check = $response[0];
@@ -93,21 +104,14 @@ class WeatherController implements ContainerInjectableInterface
             }
             if ($type == "Historik") {
                 $answer = $weather->histWeather($lat, $long);
-                if (!is_string($answer)) {
-                    foreach ($answer as $day) {
-                        $summaries[] = $day[0]["summary"];
-                    }
-                    $dates = $weather->dates('-31 day', 30);
-                }
+                $dates = $weather->dates('-31 day', 30);
+                $json = $weather->json($answer, $dates, "h");
             }
             elseif ($type == "Kommande") {
                 $answer = $weather->newWeather($lat, $long);
-                if (!is_string($answer)) {
-                    foreach ($answer as $day) {
-                        $summaries[] = $day["summary"];
-                    }
-                $dates = $weather->dates(' +1 day', 7);
-                }
+                $dates = $weather->dates(' +0 day', 7);
+                $json = $weather->json($answer, $dates, "k");
+
             }
             $country = $res["country_name"];
             $region = $res["region_name"];
@@ -115,20 +119,14 @@ class WeatherController implements ContainerInjectableInterface
         $data = [
             "check" => $check,
             "hostname" => $hostname,
-            "localIP" => $localIP,
             "type" => $version,
             "lat" => $lat,
             "long" => $long,
             "country" => $country,
             "region" => $region,
-            "tja" => $summaries,
-            "dates" => $dates,
-            "hist" => $answer
-
+            "weather" => $json
         ];
-        $page->add("weather/forms_weather", $data);
-        return $page->render([
-            "title" => $title,
-        ]);
+
+        return [$data];
     }
 }
